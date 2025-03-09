@@ -12,7 +12,7 @@
         <a-button type="primary" html-type="submit">搜索</a-button>
       </a-form-item>
     </a-form>
-    <div stylr="margin-bottom: 16px" />
+    <div style="margin-bottom: 16px"/>
     <!--表格-->
     <a-table
       :columns="columns"
