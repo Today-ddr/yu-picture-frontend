@@ -1,0 +1,133 @@
+<template>
+  <div id="addSpacePage">
+    <h2 style="margin-bottom: 16px">
+      {{ route.query?.id ? '修改空间' : '创建空间' }}
+    </h2>
+    <!--空间信息表单-->
+    <a-form name="spaceForm" layout="vertical" :model="spaceForm" @finish="handleSubmit">
+      <a-form-item name="spaceName" label="空间名称">
+        <a-input v-model:value="spaceForm.spaceName" placeholder="请输入空间名称" allow-clear />
+      </a-form-item>
+      <a-form-item label="空间级别" name="spaceLevel">
+        <a-select
+          v-model:value="spaceForm.spaceLevel"
+          placeholder="请选择空间级别"
+          :options="SPACE_LEVEL_OPTIONS"
+          style="min-width: 180px"
+          allow-clear
+        />
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" html-type="submit" :loading="loading" style="width: 100%">
+          {{ route.query?.id ? '保存空间' : '创建空间' }}
+        </a-button>
+      </a-form-item>
+    </a-form>
+    <!--空间级别介绍-->
+    <a-card title="空间级别介绍">
+      <a-typography-paragraph>
+        * 目前仅支持开通普通版，如需升级空间，请联系
+        <a href="https://baidu.com" target="_blank">Today</a>
+      </a-typography-paragraph>
+      <a-typography-paragraph v-for="spaceLevel in spaceLevelList">
+        {{ spaceLevel.text }}：大小 {{ formatSize(spaceLevel.maxSize) }}，数量
+        {{ spaceLevel.maxCount }}
+      </a-typography-paragraph>
+    </a-card>
+  </div>
+</template>
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  addSpaceUsingPost,
+  getSpaceVoByIdUsingGet,
+  listSpaceLevelUsingGet,
+  updateSpaceUsingPost,
+} from '@/api/spaceController.ts'
+import { message } from 'ant-design-vue'
+import { SPACE_LEVEL_OPTIONS } from '@/constants/space.ts'
+import { formatSize } from '../utils'
+
+const space = ref<API.SpaceVO>()
+const spaceForm = reactive<API.SpaceAddRequest | API.SpaceEditRequest>({
+  spaceLevel: 0,
+})
+const loading = ref(false)
+
+const spaceLevelList = ref<API.SpaceLevel[]>([])
+//获取空间级别列表
+const fetchSpaceLevelList = async () => {
+  const res = await listSpaceLevelUsingGet()
+  if (res.data.code === 0 && res.data.data) {
+    spaceLevelList.value = res.data.data
+  } else {
+    message.error('获取空间级别失败，' + res.data.message)
+  }
+}
+onMounted(() => {
+  fetchSpaceLevelList()
+})
+
+const router = useRouter()
+
+/**
+ * 提交表单
+ * @param values
+ */
+const handleSubmit = async (values: any) => {
+  loading.value = true
+  const spaceId = space.value?.id
+  let res
+  if (spaceId) {
+    //更新
+    res = await updateSpaceUsingPost({
+      id:spaceId,
+      ...spaceForm,
+    })
+  }else{
+    //创建
+    res = await addSpaceUsingPost({
+      ...spaceForm
+    })
+  }
+  //操作成功
+  if (res.data.code === 0 && res.data.data) {
+    message.success(route.query?.id ? '修改成功' : '创建成功')
+    //跳转到空间详情页
+    router.push({
+      path: `/space/${res.data.data}`,
+    })
+  } else {
+    message.error('创建失败，' + res.data.message)
+  }
+  loading.value = false
+}
+
+const route = useRoute()
+//获取老数据
+const getOldSpace = async () => {
+  //获取到id
+  const id = route.query?.id
+  if (id) {
+    const res = await getSpaceVoByIdUsingGet({
+      id,
+    })
+    if (res.data.code === 0 && res.data.data) {
+      const data = res.data.data
+      space.value = data
+      spaceForm.spaceName = data.spaceName
+      spaceForm.spaceLevel = data.spaceLevel
+    }
+  }
+}
+onMounted(() => {
+  getOldSpace()
+})
+</script>
+<style scoped>
+#addSpacePage {
+  max-width: 720px;
+  margin: 0 auto;
+}
+</style>
