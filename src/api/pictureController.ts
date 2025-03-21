@@ -122,6 +122,36 @@ export async function doPictureReviewUsingPost(
   })
 }
 
+/** searchPictureByColor POST /api/picture/search/color */
+export async function searchPictureByColorUsingPost(
+  body: API.SearchPictureByColorRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListPictureVO_>('/api/picture/search/color', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** searchPictureByPicture POST /api/picture/search/picture */
+export async function searchPictureByPictureUsingPost(
+  body: API.SearchPictureByPictureRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** listPictureTagCategory GET /api/picture/tag_category */
 export async function listPictureTagCategoryUsingGet(options?: { [key: string]: any }) {
   return request<API.BaseResponsePictureTagCategory_>('/api/picture/tag_category', {
@@ -201,12 +231,12 @@ export async function uploadPictureByBatchUsingPost(
   })
 }
 
-/** uploadPictureByUrl POST /api/picture/upload/url  */
+/** uploadPictureByUrl POST /api/picture/upload/url */
 export async function uploadPictureByUrlUsingPost(
   body: API.PictureUploadRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePictureVO_>('/api/picture/upload/url ', {
+  return request<API.BaseResponsePictureVO_>('/api/picture/upload/url', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
