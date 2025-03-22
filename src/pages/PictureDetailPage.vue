@@ -68,6 +68,9 @@
                 <DownloadOutlined />
               </template>
             </a-button>
+            <a-button :icon="h(ShareAltOutlined)" type="primary" ghost @click="doShare"
+            >分享
+            </a-button>
             <a-button v-if="canEdit" :icon="h(EditOutlined)" type="default" @click="doEdit"
               >编辑
             </a-button>
@@ -78,6 +81,8 @@
         </a-card>
       </a-col>
     </a-row>
+    <ShareModal ref="shareModalRef" :link="shareLink" />
+
   </div>
 </template>
 
@@ -86,9 +91,10 @@ import { onMounted, ref, h, computed } from 'vue'
 import { deletePictureUsingPost, getPictureVoByIdUsingGet } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 import { downloadImage, formatSize, toHexColor } from '@/utils'
-import { EditOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, DeleteOutlined, DownloadOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { useRouter } from 'vue-router'
+import ShareModal from '@/components/ShareModal.vue'
 
 interface Props {
   id: string | number
@@ -156,6 +162,18 @@ const doDelete = async () => {
 //下载图片
 const doDownload = () => {
   downloadImage(picture.value.url)
+}
+//分享操作
+const shareModalRef = ref()
+//分享链接
+const shareLink = ref<string>()
+//分享
+const doShare = () => {
+  //打开新页面
+  shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal()
+  }
 }
 </script>
 
