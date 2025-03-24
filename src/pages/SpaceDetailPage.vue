@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, h } from 'vue'
+import { h, onMounted, ref } from 'vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 import { message } from 'ant-design-vue'
 import {
