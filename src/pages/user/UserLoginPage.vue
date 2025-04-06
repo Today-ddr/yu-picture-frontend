@@ -41,8 +41,8 @@ import { message } from 'ant-design-vue'
 
 //用于接收表单输入的值
 const formState = reactive<API.UserLoginRequest>({
-  userAccount: 'yupi',
-  userPassword: '12345678',
+  userAccount: '',
+  userPassword: '',
 })
 const router = useRouter()
 const loginUserStore = useLoginUserStore()

@@ -34,8 +34,8 @@
         <a-button @click="changeScale(1)" :disabled="!canEdit">放大</a-button>
         <a-button @click="changeScale(-1)" :disabled="!canEdit">缩小</a-button>
         <a-button type="primary" :loading="loading" :disabled="!canEdit" @click="handleConfirm"
-          >确认</a-button
-        >
+          >确认
+        </a-button>
       </a-space>
     </div>
   </a-modal>
@@ -54,14 +54,14 @@ interface Props {
   imageUrl?: string
   picture?: API.PictureVO
   spaceId?: number
-  space?:API.SpaceVO
+  space?: API.SpaceVO
   onSuccess?: (newPicture: API.PictureVO) => void
 }
 
 const props = defineProps<Props>()
 
 //是否为团队空间
-const isTeamSpace = computed(()=>{
+const isTeamSpace = computed(() => {
   return props.space?.spaceType === SPACE_TYPE_ENUM.TEAM
 })
 
@@ -85,7 +85,7 @@ const changeScale = (num: number) => {
   cropperRef.value.changeScale(num)
   if (num > 0) {
     editAction(PICTURE_EDIT_ACTION_ENUM.ZOOM_IN)
-  }else{
+  } else {
     editAction(PICTURE_EDIT_ACTION_ENUM.ZOOM_OUT)
   }
 }
@@ -161,7 +161,7 @@ const canExitEdit = computed(() => {
 //可以点击编辑图片的操作按钮
 const canEdit = computed(() => {
   //不是团队空间，默认就可以编辑
-  if (!isTeamSpace.value){
+  if (!isTeamSpace.value) {
     return true
   }
   //团队空间，只有编辑者才能协同编辑
@@ -241,7 +241,7 @@ const initWebsocket = () => {
 //监听属性和visible变化，初始化WebSocket连接
 watchEffect(() => {
   //只有团队空间，才初始化 WebSocket 连接
-  if(isTeamSpace.value){
+  if (isTeamSpace.value) {
     initWebsocket()
   }
 })
@@ -286,12 +286,14 @@ const editAction = (action: string) => {
 </script>
 
 <style scoped>
-.image-cropper .image-cropper-actions{
+.image-cropper .image-cropper-actions {
   text-align: center;
 }
-.image-edit-actions{
+
+.image-edit-actions {
   text-align: center;
 }
+
 .image-cropper .vue-cropper {
   height: 400px !important;
 }
