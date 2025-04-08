@@ -18,11 +18,11 @@
         />
       </a-col>
       <!-- 用户信息展示栏 -->
-      <a-col flex="120px">
+      <a-col :offset="4">
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.id">
             <a-dropdown>
-              <a-space>
+              <a-space >
                 <a-avatar
                   size="large"
                   :style="{ backgroundColor: color, verticalAlign: 'middle' }"

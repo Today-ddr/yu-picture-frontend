@@ -12,7 +12,7 @@
         <a-button type="primary" html-type="submit">搜索</a-button>
       </a-form-item>
     </a-form>
-    <div style="margin-bottom: 16px"/>
+    <div style="margin-bottom: 16px" />
     <!--表格-->
     <a-table
       :columns="columns"
@@ -21,31 +21,74 @@
       @change="doTableChange"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'userAccount'">
+          <div v-if="editableData[record.id]">
+            <a-input v-model:value="editableData[record.id].userAccount" />
+          </div>
+          <div v-else>
+            {{ record.userAccount }}
+          </div>
+        </template>
+        <template v-if="column.dataIndex === 'userName'">
+          <div v-if="editableData[record.id]">
+            <a-input v-model:value="editableData[record.id].userName" />
+          </div>
+          <div v-else>
+            {{ record.userName }}
+          </div>
+        </template>
+        <template v-else-if="column.dataIndex === 'userProfile'">
+          <div v-if="editableData[record.id]">
+            <a-input v-model:value="editableData[record.id].userProfile" />
+          </div>
+          <div v-else>
+            {{ record.userProfile }}
+          </div>
+        </template>
         <template v-if="column.dataIndex === 'userAvatar'">
           <a-image :src="record.userAvatar" :width="50" />
         </template>
         <template v-else-if="column.dataIndex === 'userRole'">
-          <div v-if="record.userRole === 'admin'">
-            <a-tag color="green">管理员</a-tag>
+          <div v-if="editableData[record.id]">
+            <a-select v-model:value="editableData[record.id].userRole" style="width: 120px">
+              <a-select-option value="admin">管理员</a-select-option>
+              <a-select-option value="user">普通用户</a-select-option>
+            </a-select>
           </div>
           <div v-else>
-            <a-tag color="blue">普通用户</a-tag>
+            <a-tag :color="record.userRole === 'admin' ? 'green' : 'blue'">
+              {{ record.userRole === 'admin' ? '管理员' : '普通用户' }}
+            </a-tag>
           </div>
         </template>
         <template v-if="column.dataIndex === 'createTime'">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button danger @click="doDelete(record.id)">删除</a-button>
+          <div class="editable-row-operations">
+            <span v-if="editableData[record.id]">
+              <a-button type="primary" ghost @click="save(record.id)">保存</a-button>
+              <a-popconfirm title="确定取消？" @confirm="cancel(record.id)">
+                <a-button danger style="margin-left: 8px">取消</a-button>
+              </a-popconfirm>
+            </span>
+            <span v-else>
+              <a-button type="primary" ghost @click="edit(record.id)" style="margin-left: 8px"
+                >编辑</a-button
+              >
+              <a-button danger @click="doDelete(record.id)" style="margin-left: 8px">删除</a-button>
+            </span>
+          </div>
         </template>
       </template>
     </a-table>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
-import { deleteUserUsingPost, listUserVoByPageUsingPost } from '@/api/userController.ts'
+import { computed, onMounted, reactive, ref, type UnwrapRef } from 'vue'
+import { deleteUserUsingPost, listUserVoByPageUsingPost, updateUserUsingPost } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
+import { cloneDeep } from 'lodash-es'
 import dayjs from 'dayjs'
 
 const columns = [
@@ -144,5 +187,35 @@ const doDelete = async (id: string) => {
   } else {
     message.error('删除失败')
   }
+}
+
+//操作按钮
+const editableData: UnwrapRef<Record<string, API.UserVO>> = reactive({})
+
+const edit = (key: string) => {
+  const target = dataList.value.find((item) => item.id === key)
+  if (target) {
+    editableData[key] = cloneDeep(target)
+  }
+}
+
+const save = async(key: string) => {
+  const target = dataList.value.find((item) => item.id === key)
+  if (target && editableData[key]) {
+    Object.assign(target, editableData[key])
+    const res = await updateUserUsingPost({
+      ...editableData[key],
+    })
+    if (res.data.code === 0 && res.data.data) {
+      message.success('保存成功')
+    } else {
+      message.error('保存失败,' + res.data.message)
+    }
+    delete editableData[key]
+  }
+}
+
+const cancel = (key: string) => {
+  delete editableData[key]
 }
 </script>
