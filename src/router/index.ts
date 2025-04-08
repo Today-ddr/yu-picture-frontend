@@ -14,6 +14,7 @@ import SpaceDetailPage from '@/pages/SpaceDetailPage.vue'
 import SearchPicturePage from '@/pages/SearchPicturePage.vue'
 import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
+import SetDataPage from '@/pages/SetDataPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,6 +80,11 @@ const router = createRouter({
       path: '/my_space',
       name: '我的空间',
       component: MySpacePage,
+    },
+    {
+      path: '/set_data',
+      name: '修改资料',
+      component: SetDataPage,
     },
     {
       path: '/space/:id',

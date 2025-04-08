@@ -23,15 +23,27 @@
           <div v-if="loginUserStore.loginUser.id">
             <a-dropdown>
               <a-space>
-                <a-avatar :src="loginUserStore.loginUser.userAvatar" />
+                <a-avatar
+                  size="large"
+                  :style="{ backgroundColor: color, verticalAlign: 'middle' }"
+                  :src="loginUserStore.loginUser.avatarThumbnail"
+                >
+                  {{ loginUserStore.loginUser.userName }}
+                </a-avatar>
                 {{ loginUserStore.loginUser.userName ?? '无名' }}
               </a-space>
               <template #overlay>
                 <a-menu>
-                  <a-menu-item >
+                  <a-menu-item>
                     <router-link to="/my_space">
                       <UserOutlined />
                       我的空间
+                    </router-link>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/set_data">
+                      <SettingOutlined />
+                      修改资料
                     </router-link>
                   </a-menu-item>
                   <a-menu-item @click="doLogout">
@@ -52,11 +64,14 @@
 </template>
 <script lang="ts" setup>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined,UserOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { userLogoutUsingPost } from '@/api/userController.ts'
+
+//无头像自动生成字符
+const color = ref('#f56a00')
 
 const current = ref<string[]>([''])
 const loginUserStore = useLoginUserStore()

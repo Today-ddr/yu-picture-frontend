@@ -11,8 +11,13 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' //引入dayjs的中文语言包
 import VueCropper from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
+
+//pinia持久化
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 // 设置 dayjs 的语言为中文
 dayjs.locale('zh-cn')
 app.provide('locale', zhCN)

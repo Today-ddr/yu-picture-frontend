@@ -4,6 +4,14 @@
     <div class="desc">企业级智能协同云图库</div>
     <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
       <a-form-item
+        name="userName"
+        :rules="[
+          { required: true, message: '请输入昵称!' },
+        ]"
+      >
+        <a-input v-model:value="formState.userName" placeholder="请输入昵称" />
+      </a-form-item>
+      <a-form-item
         name="userAccount"
         :rules="[
           { required: true, message: '请输入账号!' },
@@ -12,7 +20,6 @@
       >
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />
       </a-form-item>
-
       <a-form-item
         name="userPassword"
         :rules="[
@@ -54,9 +61,9 @@ const formState = reactive<API.UserRegisterRequest>({
   userAccount: '',
   userPassword: '',
   checkPassword: '',
+  userName:'',
 })
 const router = useRouter()
-const loginUserStore = useLoginUserStore()
 /**
  * 提交表单
  * @param values

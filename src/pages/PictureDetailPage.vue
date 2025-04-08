@@ -13,7 +13,13 @@
           <a-descriptions :column="1">
             <a-descriptions-item label="作者">
               <a-space>
-                <a-avatar :size="24" :src="picture.user?.userAvatar" />
+                <a-avatar
+                  :size="24"
+                  :style="{ backgroundColor: color, verticalAlign: 'middle' }"
+                  :src="picture.user?.avatarThumbnail"
+                >
+                  {{ picture.user?.userName }}
+                </a-avatar>
                 <div>{{ picture.user?.userName }}</div>
               </a-space>
             </a-descriptions-item>
@@ -106,7 +112,8 @@ interface Props {
 
 const props = defineProps<Props>()
 const picture = ref<API.PictureVO>({})
-
+//无头像自动生成字符
+const color = ref('#f56a00')
 // 通用权限检查函数
 function createPermissionChecker(permission: string) {
   return computed(() => {

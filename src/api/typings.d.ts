@@ -241,6 +241,7 @@ declare namespace API {
   }
 
   type LoginUserVO = {
+    avatarThumbnail?: string
     createTime?: string
     editTime?: string
     id?: number
@@ -456,6 +457,14 @@ declare namespace API {
     pictureId?: number
   }
 
+  type SetUserDataRequest = {
+    avatarThumbnail?: string
+    id?: number
+    userAvatar?: string
+    userName?: string
+    userProfile?: string
+  }
+
   type Space = {
     createTime?: string
     editTime?: string
@@ -650,6 +659,7 @@ declare namespace API {
   }
 
   type User = {
+    avatarThumbnail?: string
     createTime?: string
     editTime?: string
     id?: number
@@ -691,6 +701,7 @@ declare namespace API {
   type UserRegisterRequest = {
     checkPassword?: string
     userAccount?: string
+    userName?: string
     userPassword?: string
   }
 
@@ -703,6 +714,7 @@ declare namespace API {
   }
 
   type UserVO = {
+    avatarThumbnail?: string
     createTime?: string
     id?: number
     userAccount?: string
