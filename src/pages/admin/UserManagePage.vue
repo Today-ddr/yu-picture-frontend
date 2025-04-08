@@ -95,36 +95,45 @@ const columns = [
   {
     title: 'id',
     dataIndex: 'id',
+    width: 80,
   },
   {
     title: '账号',
     dataIndex: 'userAccount',
+    width: 150,
   },
   {
     title: '用户名',
     dataIndex: 'userName',
+    width: 120,
   },
   {
     title: '头像',
     dataIndex: 'userAvatar',
+    width: 100,
   },
   {
     title: '简介',
     dataIndex: 'userProfile',
+    width: 200,
   },
   {
     title: '用户角色',
     dataIndex: 'userRole',
+    width: 120,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
+    width: 180,
   },
   {
     title: '操作',
     key: 'action',
+    width: 160,
   },
 ]
+
 //定义数据
 const dataList = ref<API.UserVO[]>([])
 const total = ref(0)
